@@ -1,3 +1,49 @@
+import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import logo from "../../assets/logo.png";
+import ThemeToggle from "../theme/theme_toggle.component"; 
+import NotificationComponent from "../notification/notification.component";
+
+const NavList = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const isLogin = Boolean(localStorage.getItem("accessToken"));
+  const isAdmin = localStorage.getItem("role") === "admin";
+
+  const notifications: any[] = [];
+  const unreadCount = 0;
+  const isOpen = false;
+  const close = () => {};
+  const toggle = () => {};
+  const markAsRead = () => {};
+  const notificationMenuRef = null;
+
+  const handelLogout = () => {
+    localStorage.clear();
+    window.location.href = "/login";
+  };
+
+  const getLinkClass = (isActive: boolean) =>
+    `inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition-all duration-300 ${
+      isActive
+        ? "bg-custom/10 text-custom"
+        : "text-slate-600 hover:bg-slate-200/60 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
+    }`;
+
+  const getMobileLinkClass = (isActive: boolean) =>
+    `flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 ${
+      isActive
+        ? "bg-custom/10 text-custom"
+        : "text-slate-600 hover:bg-slate-200/60 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
+    }`;
+
+  const renderMobileNavContent = (label: string, isActive: boolean) => (
+    <>
+      {isActive && <span className="w-1.5 h-1.5 bg-custom rounded-full" />}
+      {label}
+    </>
+  );
+
 return (
   <header className="sticky top-0 z-50 w-full bg-white/90 supports-[backdrop-filter]:bg-white/75 dark:bg-[#0B1120]/80 dark:supports-[backdrop-filter]:bg-[#0B1120]/70 backdrop-blur-md border-b border-slate-200/70 dark:border-white/10 transition-colors duration-300 transform-gpu">
     <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
@@ -237,3 +283,6 @@ return (
     </div>
   </header>
 );
+};
+
+export default NavList;
