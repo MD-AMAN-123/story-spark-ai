@@ -19,6 +19,16 @@ import CollabRoom from "./components/collab/CollabRoom";
 import StoriesComponent from "./components/stories/stories.component";
 
 
+import ScrollToTopButton from "./components/ScrollToTopButton";
+
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
+
 
 import HeroSectionComponent from "./components/hero/hero_section.component";
 import HomeComponent from "./components/home/home.component";
@@ -66,6 +76,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <>
+        <ScrollToTopButton />
         <MagicCursorComponent />
         <ScrollToTop />
         <RootLayout>
