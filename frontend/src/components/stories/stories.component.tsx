@@ -508,7 +508,13 @@ useEffect(() => {
   );
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const [isRecentPromptsOpen, setIsRecentPromptsOpen] = useState<boolean>(false);
-  const { recentPrompts, addPrompt, removePrompt, clearAll } = useRecentPrompts();
+  const {
+    recentPrompts,
+    addPrompt,
+    recordPromptUse,
+    removePrompt,
+    clearAll,
+  } = useRecentPrompts();
   const text = UI_TEXT[selectedLanguage] ?? UI_TEXT.English;
   const genreLabels = GENRE_LABELS[selectedLanguage] ?? GENRE_LABELS.English;
 
@@ -995,6 +1001,15 @@ useEffect(() => {
                       {text.recentPrompts}
                     </button>
 
+                    <Link
+                      to="/prompt-history"
+                      className="absolute right-2 top-24 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-indigo-500 dark:hover:text-indigo-300"
+                      aria-label="Open prompt history dashboard"
+                      title="Open prompt history dashboard"
+                    >
+                      Dashboard
+                    </Link>
+
                     <div className="flex items-center justify-between mt-1 px-1">
                       {isOverLimit ? (
                         <p className="text-xs text-red-400 flex items-center gap-1">
@@ -1143,6 +1158,12 @@ useEffect(() => {
       <RecentPromptsPanel
         recentPrompts={recentPrompts}
         onSelectPrompt={(prompt) => {
+          const selectedRecentPrompt = recentPrompts.find(
+            (item) => item.prompt === prompt
+          );
+          if (selectedRecentPrompt) {
+            recordPromptUse(selectedRecentPrompt.id);
+          }
           setTextareaValue(prompt);
           setValue("prompt", prompt);
           setIsRecentPromptsOpen(false);
