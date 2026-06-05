@@ -144,7 +144,12 @@ interface StoriesComponentProps {
   isLogin: boolean;
   setStories: (stories: IStories[]) => void;
   onPublishSuccess?: () => void;
+
+  ageRating: string;
+  selectedWarnings: string[];
+  customWarning: string;
 }
+
 
 interface IRelatedStoriesComponentProps {
   posts: { _id: string; title: string; [key: string]: unknown }[];
@@ -209,6 +214,10 @@ const StoriesViewComponent: React.FC<StoriesComponentProps> = ({
   stories,
   isLogin,
   setStories,
+  ageRating,
+  selectedWarnings,
+  customWarning,
+  onPublishSuccess,
 }) => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -364,6 +373,37 @@ const StoriesViewComponent: React.FC<StoriesComponentProps> = ({
         {selectedStory ? (
           <div className="bg-slate-800 border border-slate-700/50 p-6 rounded-2xl shadow-xl">
             <h2 className="text-2xl font-black mb-2">{selectedStory.title}</h2>
+            <div className="flex flex-wrap gap-2 mb-4">
+  <span
+    className={`px-3 py-1 rounded-full text-xs font-semibold ${
+      ageRating === "18+"
+        ? "bg-red-600 text-white"
+        : "bg-slate-700 text-slate-200"
+    }`}
+  >
+    🔞 {ageRating}
+  </span>
+
+  {ageRating === "18+" &&
+    (selectedWarnings.length > 0 || customWarning) && (
+      <div className="flex flex-wrap gap-2">
+        {selectedWarnings.map((warning) => (
+          <span
+            key={warning}
+            className="px-2 py-1 rounded-full text-xs bg-red-900 text-red-200"
+          >
+            ⚠ {warning}
+          </span>
+        ))}
+
+        {customWarning && (
+          <span className="px-2 py-1 rounded-full text-xs bg-red-900 text-red-200">
+            ⚠ {customWarning}
+          </span>
+        )}
+      </div>
+    )}
+</div>
             <div className="prose prose-invert max-w-none text-slate-300 leading-relaxed mb-6">
               {selectedStory.content}
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+﻿import React, { useState, useEffect, useRef, useMemo } from "react";
 import StoriesViewComponent, { IStories } from "./stories.view.component";
 import RecentPromptsPanel from "./RecentPromptsPanel";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -503,6 +503,9 @@ useEffect(() => {
   const [selectedPrompt, setSelectedPrompt] = useState<string>("");
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState<string>("");
+  const [ageRating, setAgeRating] = useState<string>("7+");
+  const [selectedWarnings, setSelectedWarnings] = useState<string[]>([]);
+  const [customWarning, setCustomWarning] = useState<string>("");
   const [selectedLength, setSelectedLength] = useState<string>("medium");
   const [textareaValue, setTextareaValue] = useState<string>("");
   const DRAFT_KEY = "storyspark_story_draft_v1";
@@ -1118,6 +1121,71 @@ useEffect(() => {
                   </div>
 
                   {/* ── Prompt textarea ── */}
+                  <div className="mb-4 space-y-3">
+  <div>
+    <label className="block text-sm font-medium mb-2">
+      Age Rating
+    </label>
+
+    <select
+      value={ageRating}
+      onChange={(e) => setAgeRating(e.target.value)}
+      className="w-full rounded-lg border p-2 bg-transparent"
+    >
+      <option value="7+">7+</option>
+      <option value="13+">13+</option>
+      <option value="16+">16+</option>
+      <option value="18+">18+</option>
+    </select>
+  </div>
+
+  {ageRating === "18+" && (
+    <>
+      <div>
+        <label className="block text-sm font-medium mb-2">
+          Content Warnings
+        </label>
+
+        <div className="flex flex-wrap gap-2">
+          {[
+            "Violence",
+            "Gore",
+            "Strong Language",
+            "Drug Use",
+            "Adult Themes",
+          ].map((warning) => (
+            <button
+              key={warning}
+              type="button"
+              onClick={() =>
+                setSelectedWarnings((prev) =>
+                  prev.includes(warning)
+                    ? prev.filter((w) => w !== warning)
+                    : [...prev, warning]
+                )
+              }
+              className={`px-3 py-1 rounded-full text-xs border ${
+                selectedWarnings.includes(warning)
+                  ? "bg-red-600 text-white"
+                  : "bg-transparent"
+              }`}
+            >
+              {warning}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <input
+        type="text"
+        placeholder="Custom warning"
+        value={customWarning}
+        onChange={(e) => setCustomWarning(e.target.value)}
+        className="w-full rounded-lg border p-2 bg-transparent"
+      />
+    </>
+  )}
+</div>
                   <div className="relative w-full">
                     <textarea
                       {...register("prompt")}
@@ -1700,12 +1768,15 @@ useEffect(() => {
 
 
       <StoriesViewComponent
-        stories={currentStories}
-        isLogin={login}
-        setStories={setStories}
-        onPublishSuccess={handlePublishSuccess}
-        isLoading={loading}
-      />
+  stories={currentStories}
+  isLogin={login}
+  setStories={setStories}
+  onPublishSuccess={handlePublishSuccess}
+  isLoading={loading}
+  ageRating={ageRating}
+  selectedWarnings={selectedWarnings}
+  customWarning={customWarning}
+/>
 
       <div className="fixed top-[-200px] left-[250px] w-[800px] h-[350px] bg-blue-500/20 rounded-full blur-3xl -z-10"></div>
       <div className="absolute top-[-200px] left-[250px] w-[800px] h-[350px] bg-blue-500/20 rounded-full blur-3xl -z-10"></div>
