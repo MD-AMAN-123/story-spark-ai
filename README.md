@@ -151,6 +151,7 @@ cp frontend/.env.example frontend/.env
 
 #### Backend (`backend/.env`)
 Variables marked Yes are required... Variables marked for a feature are only required when you use that feature.
+
 #### 🖥️ Server Configuration (Backend)
 | Variable | Example | Required | Description |
 |----------|---------|----------|-------------|
