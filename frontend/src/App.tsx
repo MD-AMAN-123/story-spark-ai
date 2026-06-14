@@ -1,14 +1,5 @@
-import StoryInspirationWrapper from "./components/StoryInspirationWrapper";
-import { JSX, useEffect, useState } from "react";
-import WritingAssistantComponent from "./components/writing-assistant/writing_assistant.component";
-import StoryConsistencyGuardian from "./components/story-consistency/StoryConsistencyGuardian";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import ScrollToTop from "./components/ScrollToTop";
+import React, { lazy, Suspense } from "react";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 
 import { USER_ROLE } from "./constants/role";
 
@@ -19,153 +10,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import ScrollToTop from "./components/ScrollToTop";
 import MagicCursorComponent from "./components/magic-cursor/magic_cursor.component";
-const ProtectedRoute = ({
-  element,
-  allowedRoles,
-}: {
-  element: JSX.Element;
-  allowedRoles: string[];
-}) => {
-  const user = getUserInfo();
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-  if (!allowedRoles.includes(user.role)) {
-    return <Navigate to="/" />;
-  }
-  return element;
-};
-
-function App() {
-  const [darkMode] = useState(
-    localStorage.getItem("theme") === "dark",
-  );
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
-
-  return (
-    <Router>
-      <MagicCursorComponent />
-      <ScrollToTop />
-      {/* Dark Mode Toggle Button */}
-      {/* <div className="fixed top-4 right-4 z-50">
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className="px-4 py-2 rounded-md bg-black text-white dark:bg-white dark:text-black transition-colors duration-300 shadow-md"
-        >
-          {darkMode ? "☀️ Light" : "🌙 Dark"}
-        </button>
-      </div> */}
-
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <RootLayout>
-              <HeroSectionComponent />
-              <HomeComponent />
-            </RootLayout>
-          }
-        />
-        <Route
-          path="/templates"
-          element={
-            <RootLayout>
-              <TemplatesComponent />
-            </RootLayout>
-          }
-        />
-        <Route
-          path="/writing-assistant"
-          element={
-            <RootLayout>
-              <WritingAssistantComponent />
-            </RootLayout>
-          }
-        />
-        <Route
-          path="/story-consistency"
-          element={
-            <RootLayout>
-              <StoryConsistencyGuardian />
-            </RootLayout>
-          }
-        />
-        <Route
-          path="/story-inspiration"
-          element={
-            <RootLayout>
-              <StoryInspirationWrapper />
-            </RootLayout>
-          }
-        />
-
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute
-              element={<DashboardLayout />}
-              allowedRoles={[USER_ROLE.ADMIN]}
-            />
-          }
-        >
-          <Route
-            index
-            element={
-              <ProtectedRoute
-                element={<DashboardComponent />}
-                allowedRoles={[USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN]}
-              />
-            }
-          />
-
-          <Route
-            path="post-lists"
-            element={
-              <ProtectedRoute
-                element={<PostListsComponent />}
-                allowedRoles={[
-                  USER_ROLE.USER,
-                  USER_ROLE.ADMIN,
-                  USER_ROLE.SUPER_ADMIN,
-                  USER_ROLE.WRITER,
-                ]}
-              />
-            }
-          />
-
-          <Route
-            path="settings"
-            element={
-              <ProtectedRoute
-                element={<SettingComponent />}
-                allowedRoles={[USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN]}
-              />
-            }
-          />
-
-          <Route
-            path="profile"
-            element={
-              <ProtectedRoute
-                element={<ProfileComponent />}
-                allowedRoles={[
-                  USER_ROLE.USER,
-                  USER_ROLE.ADMIN,
-                  USER_ROLE.SUPER_ADMIN,
-                  USER_ROLE.WRITER,
-                ]}
-              />
-            }
-          />
+import ThemeSwitcher from "./components/theme-switcher/ThemeSwitcher";
+import HeroSectionComponent from "./components/hero/hero_section.component";
+import HomeComponent from "./components/home/home.component";
+import NotFoundComponent from "./components/not-found.component";
 
 // Lazy-loaded page components
 const TemplatesComponent = lazy(() => import("./components/templates/templates.component"));
@@ -227,6 +75,7 @@ const router = createBrowserRouter([
       <>
         <ScrollToTopButton />
         <MagicCursorComponent />
+        <ThemeSwitcher />
         <ScrollToTop />
         <RootLayout>
           <Suspense fallback={<LoadingAnimation />}>
