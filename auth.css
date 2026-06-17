@@ -529,8 +529,41 @@ button:disabled {
     box-sizing: border-box;
 }
 
-/* Ensure submit and Google buttons fill the card width */
 .ds-btn-submit,
 .ds-btn-google {
     width: 100%;
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+    .auth-container {
+        width: 90%;
+        max-width: 90%;
+        padding: var(--ds-space-4);
+        margin: var(--ds-space-8) auto;
+    }
+    
+    .auth-form-card {
+        max-width: var(--ds-card-max-width);
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+input[type="text"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="password"]:focus-visible,
+.auth-field:focus-visible {
+    outline: 2px solid #d0bcff; 
+    outline-offset: 3px;
+    border-color: #7c3aed !important;
+    box-shadow: 0 0 0 4px rgba(208, 188, 255, 0.25) !important;
+    transform: translateY(-1px);
+}
+
+.ds-btn-submit:focus-visible,
+.ds-btn-google:focus-visible,
+.ds-input-action:focus-visible {
+    outline: 2px solid #f97316; 
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.3) !important;
 }
